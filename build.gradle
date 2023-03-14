@@ -8,6 +8,14 @@ group = 'com.callibrity.conductor'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
+ext {
+    versions = [
+        orkesClient: '1.0.2',
+        log4j      : '2.17.1!!'
+
+    ]
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -21,6 +29,15 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation "org.apache.logging.log4j:log4j-api:${versions.log4j}"
+    implementation "org.apache.logging.log4j:log4j-core:${versions.log4j}"
+    implementation "org.apache.logging.log4j:log4j-jul:${versions.log4j}"
+    implementation "org.apache.logging.log4j:log4j-to-slf4j:${versions.log4j}"
+    implementation "org.apache.logging.log4j:log4j-web:${versions.log4j}"
+
+    implementation "io.orkes.conductor:orkes-conductor-client:${versions.orkesClient}"
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -28,4 +45,11 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+configurations {
+    all {
+        exclude group: 'com.github.vmg.protogen', module: 'protogen-annotations'
+        exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
+    }
 }
