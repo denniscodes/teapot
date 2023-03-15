@@ -1,0 +1,50 @@
+{
+  "ownerApp": null,
+  "createTime": 1678906280892,
+  "updateTime": 1678907097571,
+  "createdBy": null,
+  "updatedBy": null,
+  "name": "teapot_api_wf",
+  "description": "Interface with the teapot service via Java API.",
+  "version": 7,
+  "tasks": [
+    {
+      "name": "teapot_worker",
+      "taskReferenceName": "teapot_task",
+      "description": null,
+      "inputParameters": {},
+      "type": "SIMPLE",
+      "dynamicTaskNameParam": null,
+      "caseValueParam": null,
+      "caseExpression": null,
+      "scriptExpression": null,
+      "dynamicForkJoinTasksParam": null,
+      "dynamicForkTasksParam": null,
+      "dynamicForkTasksInputParamName": null,
+      "startDelay": 0,
+      "subWorkflowParam": null,
+      "sink": null,
+      "optional": false,
+      "taskDefinition": null,
+      "rateLimited": null,
+      "asyncComplete": false,
+      "loopCondition": null,
+      "retryCount": null,
+      "evaluatorType": null,
+      "expression": null
+    }
+  ],
+  "inputParameters": [],
+  "outputParameters": {
+    "joke": "${teapot_task.output.jokeResponse}"
+  },
+  "failureWorkflow": null,
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "ownerEmail": "example@email.com",
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {}
+}
