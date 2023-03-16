@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.5.5'
+    id 'org.springframework.boot' version '3.0.2'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
@@ -10,12 +10,8 @@ sourceCompatibility = '17'
 
 ext {
     versions = [
-            orkesClient: '1.0.2',
             guava      : '31.0.1-jre',
-            im4java    : '1.4.0',
-            log4j      : '2.17.1!!',
-            protobuf   : '3.19.4',
-            awsSdkBom  : '1.12+'
+            jackson    : '2.11.4!!'
     ]
 }
 
@@ -41,7 +37,14 @@ dependencies {
 
     implementation group: 'com.netflix.conductor', name: 'conductor-client', version: '3.13.2'
     implementation group: 'com.netflix.conductor', name: 'conductor-common', version: '3.13.2'
+    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.3.Final'
 
+
+    implementation group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jackson}"
+    implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${versions.jackson}"
+    implementation "com.google.guava:guava:${versions.guava}"
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -54,7 +57,6 @@ tasks.named('test') {
 
 configurations {
     all {
-        exclude group: 'com.github.vmg.protogen', module: 'protogen-annotations'
         exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
     }
 }
