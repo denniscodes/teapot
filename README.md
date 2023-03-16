@@ -1,5 +1,8 @@
 # Teapot Service
-An example REST service for a mythical teapot.
+An example REST service for a mythical teapot. Now with a Teapot Worker interface.
+
+## Conductor Setup
+I recommend the [Orkes Coummunity Conductor] project for running Conductor.
 
 ## Root Service
 Returns a payload indicating that this is a teapot, along with the status code of 418.
