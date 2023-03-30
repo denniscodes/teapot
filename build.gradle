@@ -8,16 +8,6 @@ group = 'com.callibrity.conductor'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
-ext {
-    versions = [
-            guava      : '31.0.1-jre',
-            im4java    : '1.4.0',
-            log4j      : '2.17.1!!',
-            protobuf   : '3.19.4',
-            awsSdkBom  : '1.12+'
-    ]
-}
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -26,22 +16,11 @@ configurations {
 
 repositories {
     mavenCentral()
-    maven {
-        url 'https://orkes-artifacts-repo.s3.amazonaws.com/snapshots/'
-        content {
-            includeGroup 'io.orkes.conductor'
-        }
-    }
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    implementation group: 'com.netflix.conductor', name: 'conductor-client', version: '3.13.2'
-    implementation group: 'com.netflix.conductor', name: 'conductor-common', version: '3.13.2'
-    implementation group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1.1'
-    implementation group: 'org.glassfish.jersey.core', name: 'jersey-common', version: '2.39'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -52,9 +31,3 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-configurations {
-    all {
-        exclude group: 'com.github.vmg.protogen', module: 'protogen-annotations'
-        exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
-    }
-}
