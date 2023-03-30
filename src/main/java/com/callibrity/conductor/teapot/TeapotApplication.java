@@ -1,5 +1,6 @@
 package com.callibrity.conductor.teapot;
 
+import com.callibrity.conductor.teapot.domain.TeapotJokeService;
 import com.callibrity.conductor.teapot.domain.TeapotService;
 import com.callibrity.conductor.teapot.workers.TeapotWorker;
 import com.netflix.conductor.client.automator.TaskRunnerConfigurer;
@@ -7,10 +8,12 @@ import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.worker.Worker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -20,7 +23,16 @@ public class TeapotApplication {
     private static final String CONDUCTOR_CLIENT_KEY_ID = "conductor.security.client.key-id";
     private static final String CONDUCTOR_CLIENT_SECRET = "conductor.security.client.secret";
 
-    @Autowired private TeapotService teapotService;
+    @Value("${app.secondsToBoil:180}")
+    private int boilTime;
+    @Value("${app.secondsToFill:30}")
+    private int fillTime;
+    @Value("${app.secondsToPour:1}")
+    private int pourTime;
+
+    private TaskRunnerConfigurer configurer = null;
+    @Autowired private TeapotJokeService teapotJokeService;
+
     public static void main(String[] args) throws IOException {
         SpringApplication.run(TeapotApplication.class, args);
     }
@@ -32,14 +44,19 @@ public class TeapotApplication {
 
         int threadCount = 2;            //number of threads used to execute workers.  To avoid starvation, should be same or more than number of workers
 
-        Worker worker1 = new TeapotWorker(teapotService);
+        Worker worker1 = new TeapotWorker(teapotJokeService);
 
         // Create TaskRunnerConfigurer
-        TaskRunnerConfigurer configurer = new TaskRunnerConfigurer.Builder(taskClient, Arrays.asList(worker1))
+        configurer = new TaskRunnerConfigurer.Builder(taskClient, Arrays.asList(worker1))
                 .withThreadCount(threadCount)
                 .build();
 
         // Start the polling and execution of tasks
         configurer.init();
+    }
+
+    @PreDestroy
+    public void stopWorkers() {
+        configurer.shutdown();
     }
 }
