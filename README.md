@@ -16,4 +16,4 @@ the service is out of jokes.
 
 ## Orkes Conductor Integrations
 teapot_rest_wf.json creates a workflow for requesting jokes from the teapot REST
-service.
+service. teapot_worker_wf.json supports a Conductor Java API workflow. 
