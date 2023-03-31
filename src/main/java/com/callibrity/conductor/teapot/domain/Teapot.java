@@ -31,23 +31,27 @@ public class Teapot {
     public boolean turnOn() {
         if (state.equals(OFF)) setState(TeapotState.EMPTY);
         level = 0;
+        log.debug("Teapot is on, empty.");
         return state.equals(TeapotState.EMPTY);
     }
 
     public boolean turnOff() {
         state = OFF;
+        log.debug("Teapot is off.");
         return state.equals(OFF);
     }
     public boolean heatWater() {
         if (state.equals(TeapotState.FULL))
             startHeaterTimer();
+        log.debug("Teapot is heating.");
         return state.equals(TeapotState.HEATING);
     }
 
     public boolean fillPot() {
-        if (state.equals(TeapotState.EMPTY))
+        if (state.equals(TeapotState.EMPTY)) {
             startFillerTimer();
-        else {
+            log.debug("Teapot is filling.");
+        } else {
             log.warn("Expected empty pot, was: {}.", state.name());
             return false;
         }
@@ -68,6 +72,7 @@ public class Teapot {
             success = true;
         }
         if (level < 1) setState(TeapotState.EMPTY);
+        log.debug("Cup brewed. {} cups remaining.", level);
         return success;
     }
 

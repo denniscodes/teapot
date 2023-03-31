@@ -1,15 +1,27 @@
 package com.callibrity.conductor.teapot.domain;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import static java.lang.Thread.sleep;
 
 
 @Service @Slf4j
-public class TeapotJokeService {
+public class TeapotService {
+
+    @Value("${app.secondsToBoil:180}")
+    private int boilTime;
+    @Value("${app.secondsToFill:30}")
+    private int fillTime;
+    @Value("${app.secondsToPour:1}")
+    private int pourTime;
 
     public final Teapot teapot;
+
+    public TeapotService() {
+        this.teapot = new Teapot(boilTime, fillTime, pourTime);
+    }
 
     public TeapotService(Teapot teapot) {
         this.teapot = teapot;
@@ -23,6 +35,7 @@ public class TeapotJokeService {
     }
 
     public BrewResult brewTea(int cupCount, BrewCallback optionalCallback) {
+        log.info("Brew request started.");
         BrewResult result = new BrewResult();
         if (cupCount > Teapot.TEAPOT_MAX_CAPACITY) {
             result.setStatus(BrewResult.ORDER_TOO_LARGE);
@@ -34,6 +47,7 @@ public class TeapotJokeService {
             result.setStatus(BrewResult.BREW_IN_PROGRESS);
             startAsyncBrewProcess(cupCount,optionalCallback);
         }
+        log.info("Brew request {}.", result.getStatus());
         return result;
     }
 
@@ -59,26 +73,23 @@ public class TeapotJokeService {
                 teapot.pourCup();
             }
             if (optionalCallback != null) optionalCallback.callback(new BrewResult(BrewResult.BREW_COMPLETE, cupCount));
+            log.info("Brew thread complete.");
         }, "brewThread");
         brewThread.start();
     }
 
     private boolean makeTeapotReady()  {
         try {
-            if (teapot.getState().equals(TeapotState.OFF)) {
-                teapot.turnOn();
-                return makeTeapotReady();
-            } else if (teapot.getState().equals(TeapotState.EMPTY)) {
-                teapot.fillPot();
-                while (!teapot.getState().equals(TeapotState.FULL))
-                    sleep(1000);
-                return makeTeapotReady();
-            } else if (teapot.getState().equals(TeapotState.FULL)) {
-                teapot.heatWater();
-                while (!teapot.getState().equals(TeapotState.READY))
-                    sleep(1000);
-            } else {
-                log.warn("Unexpected state: {}", teapot.getState().toString());
+            while (!teapot.getState().equals(TeapotState.READY)) {
+                switch (teapot.getState()) {
+                    case OFF -> teapot.turnOn();
+                    case EMPTY -> teapot.fillPot();
+                    case FILLING -> sleep(1000);
+                    case FULL -> teapot.heatWater();
+                    case HEATING -> sleep(1000);
+                    case BREWING -> sleep(1000);
+                    case READY -> log.debug("Ready to brew!");
+                }
             }
         } catch (InterruptedException ex) {
             log.warn(ex.getMessage());

@@ -17,16 +17,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 
 
 @Controller @Slf4j
 public class TeapotController {
-   @Autowired private final TeapotJokeService teapotService;
+    @Autowired private final TeapotJokeService teapotJokeService;
+    @Autowired private final TeapotService teapotService;
 
-    public TeapotController(TeapotJokeService teapotService) {
+    public TeapotController(TeapotJokeService teapotJokeService, TeapotService teapotService) {
         this.teapotService = teapotService;
+        this.teapotJokeService = teapotJokeService;
     }
 
     @GetMapping
@@ -36,19 +39,19 @@ public class TeapotController {
 
     @GetMapping("/joke")
     public ResponseEntity<JokeResponse> getRandomJoke() {
-        return new ResponseEntity<>(new JokeResponse(teapotService.getRandomJoke()), HttpStatus.OK);
+        return new ResponseEntity<>(new JokeResponse(teapotJokeService.getRandomJoke()), HttpStatus.OK);
     }
     @GetMapping("/joke/{index}")
     public ResponseEntity<JokeResponse> getSpecificJoke(@PathVariable Integer index) {
         try {
-            return new ResponseEntity<>(new JokeResponse(teapotService.getSpecificJoke(index)), HttpStatus.OK);
+            return new ResponseEntity<>(new JokeResponse(teapotJokeService.getSpecificJoke(index)), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new JokeResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping("/tea")
-    public ResponseEntity<TeapotResponse> brewTea(TeapotRequest teapotRequest) {
+    public ResponseEntity<TeapotResponse> brewTea(@RequestBody TeapotRequest teapotRequest) {
         BrewCallback notifyWhenDone = (BrewResult brewResult) -> {
             try (CloseableHttpClient instance = HttpClients.createDefault();
                 CloseableHttpResponse response = instance.execute(new HttpGet(teapotRequest.getUri())))
