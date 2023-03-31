@@ -10,9 +10,9 @@ public class Teapot {
     public static int TEAPOT_MAX_CAPACITY = 8;
     private TeapotState state;
 
-    private int boilSeconds;
-    private int fillSeconds;
-    private int pourSeconds;
+    private final int boilSeconds;
+    private final int fillSeconds;
+    private final int pourSeconds;
     private int level = 0;
 
     public Teapot(int secondsToBoil, int secondToFill, int secondsToPour) {
@@ -62,7 +62,7 @@ public class Teapot {
         boolean success = false;
         if (state.equals(TeapotState.READY) && level > 0) {
             setState(TeapotState.BREWING);
-            try {sleep(pourSeconds*1000);}
+            try {sleep(pourSeconds*1000L);}
             catch (InterruptedException ex) {
                 log.warn("Brewing interrupted.");
                 return false;
@@ -99,7 +99,7 @@ public class Teapot {
 
     /**
      * Thread-safe update of teapot state.
-     * @param state
+     * @param state new state.
      */
     private void setState(TeapotState state) {
         synchronized (this) {
@@ -110,7 +110,7 @@ public class Teapot {
         setState(TeapotState.HEATING);
         var thread = (new Thread(() -> {
             try {
-                sleep(boilSeconds*1000);
+                sleep(boilSeconds*1000L);
                 log.debug("Water boiled.");
                 setState(TeapotState.READY);
             }
@@ -125,7 +125,7 @@ public class Teapot {
         setState(TeapotState.FILLING);
         var thread = (new Thread(() -> {
             try {
-                sleep(fillSeconds*1000);
+                sleep(fillSeconds*1000L);
                 log.debug("teapot is full.");
                 setLevel(TEAPOT_MAX_CAPACITY);
                 setState(TeapotState.FULL);
@@ -140,7 +140,7 @@ public class Teapot {
 
     /**
      * Thread safe update of teapot capacity.
-     * @param teapotCapacity
+     * @param teapotCapacity maximum number of cups for the pot.
      */
     private void setLevel(int teapotCapacity) {
         synchronized (this) {
