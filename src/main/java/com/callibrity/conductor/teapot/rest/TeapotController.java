@@ -56,8 +56,7 @@ public class TeapotController {
             try (CloseableHttpClient instance = HttpClients.createDefault();
                 CloseableHttpResponse response = instance.execute(new HttpGet(teapotRequest.getUri())))
             {
-                log.info("Client notified with status: {}", brewResult.getStatus());
-
+                log.info("Client notified with status: {}, http status {}", brewResult.getStatus(), response.getStatusLine().getStatusCode());
             } catch (IOException ex) {
                 log.warn("IOException when notifying client.");
             }
