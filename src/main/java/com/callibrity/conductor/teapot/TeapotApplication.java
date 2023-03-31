@@ -8,7 +8,7 @@ import java.io.IOException;
 
 @SpringBootApplication @Slf4j
 public class TeapotApplication {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         SpringApplication.run(TeapotApplication.class, args);
     }
 
