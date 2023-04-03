@@ -1,8 +1,8 @@
-package com.callibrity.conductor.teapot.domain;
+package com.callibrity.teapot.domain;
 
 import lombok.extern.slf4j.Slf4j;
 
-import static com.callibrity.conductor.teapot.domain.TeapotState.OFF;
+import static com.callibrity.teapot.domain.TeapotState.OFF;
 import static java.lang.Thread.sleep;
 
 @Slf4j

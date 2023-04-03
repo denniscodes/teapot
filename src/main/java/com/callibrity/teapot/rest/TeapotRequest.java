@@ -1,4 +1,4 @@
-package com.callibrity.conductor.teapot.rest;
+package com.callibrity.teapot.rest;
 
 import lombok.Data;
 

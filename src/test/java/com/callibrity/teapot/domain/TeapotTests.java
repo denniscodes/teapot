@@ -1,5 +1,7 @@
-package com.callibrity.conductor.teapot.domain;
+package com.callibrity.teapot.domain;
 
+import com.callibrity.teapot.domain.Teapot;
+import com.callibrity.teapot.domain.TeapotState;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.Thread.sleep;

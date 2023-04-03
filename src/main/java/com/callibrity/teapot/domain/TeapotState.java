@@ -1,4 +1,4 @@
-package com.callibrity.conductor.teapot.domain;
+package com.callibrity.teapot.domain;
 
 public enum TeapotState {
     OFF("Off"), EMPTY("Empty"), FILLING("Filling"), FULL("Full"), HEATING("Heating"), READY("Ready"), BREWING("Brewing");

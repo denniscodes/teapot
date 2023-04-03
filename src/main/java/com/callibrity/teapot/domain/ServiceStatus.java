@@ -1,4 +1,4 @@
-package com.callibrity.conductor.teapot.domain;
+package com.callibrity.teapot.domain;
 
 import lombok.Data;
 
