@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static java.lang.Thread.sleep;
-
 
 @Service @Slf4j
 public class TeapotJokeService {
@@ -20,7 +18,8 @@ public class TeapotJokeService {
                 new Joke("Why does a teapot whistle when it’s boiling?", "Because it’s tealighted!"),
                 new Joke("What do you call a teapot of boiling water on top of Mount Everest?", "A HIGH-POT-IN-USE"),
                 new Joke("What language do teapots speak?", "Teabrew"),
-                new Joke("To stay out of hot water when brewing a pun...", "it is best to use subtle tea."));
+                new Joke("To stay out of hot water when brewing a pun...", "it is best to use subtle tea."),
+                new Joke("I'm an expert at putting leaves in water.", "It's my special tea."));
     }
 
     public Joke getRandomJoke() {
