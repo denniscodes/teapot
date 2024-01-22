@@ -24,8 +24,8 @@ import java.io.IOException;
 
 @Controller @Slf4j
 public class TeapotController {
-    @Autowired private final TeapotJokeService teapotJokeService;
-    @Autowired private final TeapotService teapotService;
+    private final TeapotJokeService teapotJokeService;
+    private final TeapotService teapotService;
 
     public TeapotController(TeapotJokeService teapotJokeService, TeapotService teapotService) {
         this.teapotService = teapotService;
