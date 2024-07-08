@@ -1,19 +1,15 @@
 package com.callibrity.teapot.rest;
 
-import com.callibrity.teapot.domain.BrewCallback;
-import com.callibrity.teapot.domain.BrewResult;
-import com.callibrity.teapot.domain.TeapotJokeService;
-import com.callibrity.teapot.domain.TeapotService;
-import io.micrometer.core.instrument.util.StringUtils;
+import com.callibrity.teapot.domain.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +46,11 @@ public class TeapotController {
         }
     }
 
+    @GetMapping("/tea")
+    public ResponseEntity<ServiceStatus> getStatus() {
+        return new ResponseEntity<>(teapotService.getStatus(), HttpStatus.OK);
+    }
+
     @PostMapping("/tea")
     public ResponseEntity<TeapotResponse> brewTea(@RequestBody TeapotRequest teapotRequest) {
         BrewCallback notifyWhenDone = (BrewResult brewResult) -> {
@@ -62,7 +63,7 @@ public class TeapotController {
             }
         };
         var brewTeaResult = teapotService.brewTea(teapotRequest.getCupsRequested(),
-                StringUtils.isNotBlank(teapotRequest.getUri()) ? notifyWhenDone : null);
+                StringUtils.hasLength(teapotRequest.getUri()) ? notifyWhenDone : null);
         var teapotResponse = new TeapotResponse();
         teapotResponse.setMessage(brewTeaResult.getStatus());
         return new ResponseEntity<>(teapotResponse, HttpStatus.OK);
